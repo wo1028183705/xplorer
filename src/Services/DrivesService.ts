@@ -1,4 +1,4 @@
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/core";
 import { IDrive, IUniqueDrive } from "../Typings/Store/drive";
 
 /**
@@ -8,7 +8,7 @@ import { IDrive, IUniqueDrive } from "../Typings/Store/drive";
 export const fetchDrives = async (platform: string): Promise<IDrive[]> => {
     const drives = await invoke<{ array_of_drives: IDrive[] }>("get_drives");
     let filteredDrives = drives.array_of_drives.filter((drive) => drive.available_space > 0);
-    if (platform !== "win32") filteredDrives = filteredDrives.filter((d) => d.is_removable);
+    if (platform !== "windows") filteredDrives = filteredDrives.filter((d) => d.is_removable);
     return filteredDrives;
 };
 

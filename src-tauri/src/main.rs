@@ -161,17 +161,18 @@ fn change_transparent_effect(effect: String, window: tauri::Window) {
         use window_vibrancy::clear_mica;
         clear_mica(&window).unwrap(); 
     }
-    match effect.as_str() {
-        "blur" => apply_blur(&window, Some((18, 18, 18, 125))).unwrap(),
-        "acrylic" => apply_acrylic(&window, Some((18, 18, 18, 125))).unwrap(),
-        "mica" => {
-            use window_vibrancy::apply_mica;
-            if is_win_11(){ 
-                apply_mica(&window).unwrap()
-            }
-        },
-        _ => (),
-    }
+    // match effect.as_str() {
+    //     "blur" => apply_blur(&window, Some((18, 18, 18, 125))).unwrap(),
+    //     "acrylic" => apply_acrylic(&window, Some((18, 18, 18, 125))).unwrap(),
+    //     "mica" => {
+    //         use window_vibrancy::apply_mica;
+    //         if is_win_11(){ 
+    //             apply_mica(&window).unwrap()
+    //         }
+    //     },
+    //     _ => (),
+    // }
+    ()
 }
 
 #[cfg(target_os = "macos")]
@@ -195,7 +196,7 @@ fn change_transparent_effect(_effect: String, _window: tauri::Window) {
 #[tauri::command]
 #[inline]
 fn enable_shadow_effect(effect: bool, window: tauri::Window) {
-    set_shadow(&window, effect).unwrap();
+    // set_shadow(&window, effect).unwrap();
 }
 
 #[cfg(target_os = "linux")]
@@ -210,6 +211,8 @@ async fn main() {
     extensions::init_extension().await;
     tauri::async_runtime::set(tokio::runtime::Handle::current());
     tauri::Builder::default()
+        .plugin(tauri_plugin_os::init())
+        .plugin(tauri_plugin_fs::init())
         .invoke_handler(tauri::generate_handler![
             files_api::read_directory,
             files_api::is_dir,

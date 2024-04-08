@@ -1,14 +1,14 @@
-import { clipboard } from '@tauri-apps/api';
+import { writeText, readText } from "@tauri-apps/plugin-clipboard-manager";
 
 /**
  * Write text into clipboard
  * @param {string} text - Text you want to write to clipboard
  * @returns {void}
  */
-export const writeTextToClipboard = async (text: string): Promise<void> => clipboard.writeText(text);
+export const writeTextToClipboard = async (text: string): Promise<void> => writeText(text);
 
 /**
  * Read clipboard text
  * @returns {Promise<string>}
  */
-export const readTextFromClipboard = async (): Promise<string> => clipboard.readText();
+export const readTextFromClipboard = async (): Promise<string> => readText();

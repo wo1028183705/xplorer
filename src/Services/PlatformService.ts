@@ -1,5 +1,6 @@
-import { os } from "@tauri-apps/api";
+import { platform } from "@tauri-apps/plugin-os";
 
 export const getOS = async (): Promise<string> => {
-    return await os.platform();
+    const currentPlatform = await platform();
+    return currentPlatform;
 };

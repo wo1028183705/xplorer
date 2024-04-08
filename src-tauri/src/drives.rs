@@ -66,6 +66,5 @@ pub fn get_drives() -> Result<Drives, String> {
             }
         })
         .collect();
-
     Ok(Drives { array_of_drives })
 }

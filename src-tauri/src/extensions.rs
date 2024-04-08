@@ -59,34 +59,35 @@ pub fn get_custom_stylesheet_filepath() -> Option<String> {
 
 #[tauri::command]
 pub async fn listen_stylesheet_change(window: tauri::Window) {
-    if ARGS_STRUCT.value_of("theme").is_some() {
-        // listen to file_path file changes
-        let (tx, rx) = channel();
-        let mut watcher = raw_watcher(tx).unwrap();
-        watcher
-            .watch(
-                Path::new(&get_custom_stylesheet_filepath().unwrap_or_default()),
-                RecursiveMode::NonRecursive,
-            )
-            .unwrap();
+    // if ARGS_STRUCT.value_of("theme").is_some() {
+    //     // listen to file_path file changes
+    //     let (tx, rx) = channel();
+    //     let mut watcher = raw_watcher(tx).unwrap();
+    //     watcher
+    //         .watch(
+    //             Path::new(&get_custom_stylesheet_filepath().unwrap_or_default()),
+    //             RecursiveMode::NonRecursive,
+    //         )
+    //         .unwrap();
 
-        loop {
-            match rx.recv() {
-                Ok(RawEvent { .. }) => {
-                    let value = match get_custom_stylesheet_filepath() {
-                        None => serde_json::Value::default(),
-                        Some(value) => {
-                            serde_json::from_str(std::fs::read_to_string(value).unwrap().as_str())
-                                .unwrap_or_default()
-                        }
-                    };
+    //     loop {
+    //         match rx.recv() {
+    //             Ok(RawEvent { .. }) => {
+    //                 let value = match get_custom_stylesheet_filepath() {
+    //                     None => serde_json::Value::default(),
+    //                     Some(value) => {
+    //                         serde_json::from_str(std::fs::read_to_string(value).unwrap().as_str())
+    //                             .unwrap_or_default()
+    //                     }
+    //                 };
 
-                    window.emit("stylesheet_changes", value).unwrap();
-                }
-                Err(e) => println!("watch error: {:?}", e),
-            }
-        }
-    }
+    //                 window.emit("stylesheet_changes", value).unwrap();
+    //             }
+    //             Err(e) => println!("watch error: {:?}", e),
+    //         }
+    //     }
+    // }
+    ()
 }
 
 #[tauri::command]

@@ -37,7 +37,7 @@ export const File = ({ mode, metadata }: IFileProps): JSX.Element => {
                 ...activeTab,
                 path: getStandardPath(filePath),
                 name: filePath.split("\\").pop() || "",
-            })
+            }),
         );
         dispatch(setActiveTab({ name: filePath.split("\\").pop() || "", path: getStandardPath(filePath) }));
     };

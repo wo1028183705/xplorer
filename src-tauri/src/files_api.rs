@@ -19,9 +19,10 @@ use std::time::SystemTime;
 use std::fs::File;
 use std::io::prelude::*;
 use zip::write::FileOptions;
-use tauri::api::dialog::ask;
+use tauri::Manager;
+// use tauri::api::dialog::ask;
 #[cfg(target_os = "windows")]
-use tauri::api::path::local_data_dir;
+use tauri::path::PathResolver;
 
 #[derive(serde::Serialize, Clone, Debug)]
 pub struct LnkData {
@@ -428,30 +429,31 @@ pub fn open_file(file_path: String, window: tauri::Window) -> bool {
     let extension = file_path.split('.').last().unwrap();
     let window_clone = window.clone();
     if extension == "xtension" {
-        ask(
-            Some(&window_clone),
-            "Special file type",
-            "This is Xplorer's extension file, do you want to install it?",
-            move |answer| {
-                if answer {
-                    let file: Result<serde_json::Value, serde_json::Error> =
-                        serde_json::from_str(std::fs::read_to_string(file_path).unwrap().as_str());
-                    let file = match file {
-                        Ok(file) => file,
-                        Err(_) => {
-                            panic!("Error parsing file");
-                        }
-                    };
-                    extensions::install_extensions(file);
-                    println!("Extension installed");
-                    window
-                        .emit("update_theme", serde_json::Value::Null)
-                        .unwrap();
-                }
-            },
-        );
-
         true
+        // ask(
+        //     Some(&window_clone),
+        //     "Special file type",
+        //     "This is Xplorer's extension file, do you want to install it?",
+        //     move |answer| {
+        //         if answer {
+        //             let file: Result<serde_json::Value, serde_json::Error> =
+        //                 serde_json::from_str(std::fs::read_to_string(file_path).unwrap().as_str());
+        //             let file = match file {
+        //                 Ok(file) => file,
+        //                 Err(_) => {
+        //                     panic!("Error parsing file");
+        //                 }
+        //             };
+        //             extensions::install_extensions(file);
+        //             println!("Extension installed");
+        //             window
+        //                 .emit("update_theme", serde_json::Value::Null)
+        //                 .unwrap();
+        //         }
+        //     },
+        // );
+
+        // true
     } else {
         println!("Opening file: {}", file_path);
         open::that(file_path).is_ok()
@@ -779,7 +781,8 @@ pub async fn listen_dir(dir: String, window: tauri::Window) -> Result<String, St
 #[cfg(target_os = "windows")]
 #[tauri::command]
 pub async fn extract_icon(file_path: &str) -> Result<String, String> {
-    let storage_dir = Path::new(&local_data_dir().unwrap()).join("Xplorer/cache");
+    let storage_dir = Path::new("C:\\Users\\User\\AppData\\Roaming\\Xplorer");
+
     fs::create_dir_all(&storage_dir).unwrap();
     let basename = FileSystemUtils::get_basename(file_path);
     let icon_path = storage_dir.join(basename + ".png");
@@ -859,7 +862,7 @@ pub async fn search_in_dir(
                 Ok(path) => {
                     files.push(get_file_properties(path.to_str().unwrap()).await.unwrap());
                     if files.len() % 100 == 0 {
-                        window.emit("search_partial_result", files.clone()).unwrap();
+                        // window.emit("search_partial_result", files.clone()).unwrap();
 
                         files.clear();
                     }
