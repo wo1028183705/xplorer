@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import File from "../File";
@@ -14,6 +14,10 @@ export interface IMainViewProps {
 const MainView = ({ currentDirectory }: IMainViewProps) => {
     const files = useSelector<IAppState, IAppState["files"]["files"]>((state) => state.files.files);
     const filePreview = useSelector<IAppState, IAppState["files"]["filePreview"]>((state) => state.files.filePreview);
+
+    useEffect(() => {
+        console.log(files, "a");
+    }, [files]);
 
     // Places directories first, sorts files and directories by name
     const sortFiles = (a: IFile, b: IFile): number => {

@@ -226,7 +226,6 @@ async fn main() {
             files_api::get_trashed_items,
             files_api::delete_file,
             files_api::get_files_in_directory,
-            files_api::listen_dir,
             files_api::restore_files,
             files_api::purge_trashes,
             files_api::restore_trash,

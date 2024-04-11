@@ -15,7 +15,7 @@
 // import Search from './Components/Files/File Operation/search';
 
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 
 import App from "./App";
@@ -24,18 +24,27 @@ import store from "./Store";
 import { fetchFavoritesRequest } from "./Store/ActionCreators/FavoritesActionCreators";
 import { fetchDrivesRequest } from "./Store/ActionCreators/DriveActionCreators";
 import { getOSRequest } from "./Store/ActionCreators/PlatformActionCreators";
+import { fetchFilesRequest, listenDirectoryRequest } from "./Store/ActionCreators/DirectoryActionCreators";
 
 // Wait DOM Loaded to be loaded
 document.addEventListener("DOMContentLoaded", async () => {
     store.dispatch(getOSRequest());
     store.dispatch(fetchFavoritesRequest());
     store.dispatch(fetchDrivesRequest());
+    store.dispatch(
+        listenDirectoryRequest((dirName: string) => {
+            console.log(dirName);
+            // Re-fetch files
+            // TODO:This is a temporary solution, need to divide the logic according to the change action (ex: create file corresponds to push file to the list)
+            store.dispatch(fetchFilesRequest(dirName));
+        }),
+    );
 
-    ReactDOM.render(
+    const root = createRoot(document.getElementById("root"));
+    root.render(
         <Provider store={store}>
             <App />
         </Provider>,
-        document.getElementById("root")
     );
 
     // // Read user preferences

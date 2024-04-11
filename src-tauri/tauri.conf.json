@@ -3,7 +3,7 @@
     "version": "0.3.1",
     "build": {
         "frontendDist": "../out/src",
-        "devUrl": "http://localhost:8080",
+        "devUrl": "http://localhost:1234",
         "beforeDevCommand": "",
         "beforeBuildCommand": ""
     },

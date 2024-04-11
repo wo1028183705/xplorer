@@ -41,7 +41,7 @@ const Header = () => {
                                 <span id="tab-position">{`${activeTab?.name === tab.name ? "[active] " : ""}${tab.name}`}</span>
                             </button>,
                         ],
-                        []
+                        [],
                     )}
 
                     <button type="button" onClick={createNewTab}>

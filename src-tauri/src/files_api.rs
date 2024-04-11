@@ -4,7 +4,7 @@ use crate::storage;
 use glob::{glob_with, MatchOptions};
 #[cfg(not(target_os = "macos"))]
 use normpath::PathExt;
-use notify::{raw_watcher, RawEvent, RecursiveMode, Watcher};
+use notify::{Watcher, RecommendedWatcher, RecursiveMode, Result as NotifyResult, Config};
 use parselnk::Lnk;
 use std::convert::TryFrom;
 use std::fs;
@@ -20,6 +20,61 @@ use std::fs::File;
 use std::io::prelude::*;
 use zip::write::FileOptions;
 use tauri::Manager;
+use std::collections::HashMap;
+use lazy_static::lazy_static;
+use std::sync::Mutex;
+
+lazy_static!{
+    static ref listening_dir_listener: Mutex<RecommendedWatcher> = Mutex::new(RecommendedWatcher::new(|_|{}, Config::default()).unwrap());
+    static ref listening_dir_path: Mutex<String> = Mutex::new(String::new());
+}
+// listen to change events of a directory in another thread 
+fn listen_dir(dir: &Path , window: tauri::Window) {
+    let dir = dir.to_path_buf();
+    std::thread::spawn(move || {
+        // unwatch the previous directory
+        listening_dir_listener.lock().unwrap().unwatch(Path::new(listening_dir_path.lock().unwrap().as_str())).unwrap();
+        let (tx, rx) = channel();
+        let mut watcher = RecommendedWatcher::new(move |res: NotifyResult<notify::Event>| {
+            tx.send(res).unwrap();
+        }, Config::default())
+        .unwrap();
+
+        watcher
+            .watch(&dir, RecursiveMode::NonRecursive)
+            .unwrap();
+
+        // save the directory listener
+        *listening_dir_listener.lock().unwrap() = watcher;
+        *listening_dir_path.lock().unwrap() = dir.to_str().unwrap().to_string();
+
+        loop {
+            match rx.recv() {
+                Ok(event) => {
+                    match event {
+                        Ok(event) => {
+                            let path = event.paths.first().unwrap();
+                            let event = match event.kind {
+                                notify::EventKind::Create(_) => "create".to_string(),
+                                notify::EventKind::Remove(_) => "remove".to_string(),
+                                notify::EventKind::Modify(_) => "modify".to_string(),
+                                _ => "unknown".to_string(),
+                            };
+                            let event = Event {
+                                path: path.to_str().unwrap().to_string(),
+                                event,
+                            };
+                            window.emit("dir_change", event).unwrap();
+                        }
+                        Err(e) => break,
+                    }
+                }
+                Err(e) => break,
+            }
+        }
+    });
+}
+
 // use tauri::api::dialog::ask;
 #[cfg(target_os = "windows")]
 use tauri::path::PathResolver;
@@ -68,7 +123,7 @@ pub struct TrashMetaData {
 
 #[derive(serde::Serialize)]
 pub struct FolderInformation {
-    number_of_files: u16,
+    num_files: u16,
     files: Vec<FileMetaData>,
     skipped_files: Vec<String>,
     lnk_files: Vec<LnkData>,
@@ -339,7 +394,7 @@ pub fn is_dir(path: &Path) -> Result<bool, String> {
 
 /// Read files and its information of a directory
 #[tauri::command]
-pub async fn read_directory(dir: &Path) -> Result<FolderInformation, String> {
+pub async fn read_directory(dir: &Path, window: tauri::Window) -> Result<FolderInformation, String> {
     let preference = match storage::read_data("preference") {
         Ok(result) => result,
         Err(_) => return Err("Error reading preference".into()),
@@ -402,8 +457,10 @@ pub async fn read_directory(dir: &Path) -> Result<FolderInformation, String> {
         }
     }
 
+    listen_dir(dir, window);
+
     Ok(FolderInformation {
-        number_of_files,
+        num_files: number_of_files,
         files,
         skipped_files,
         lnk_files,
@@ -724,56 +781,6 @@ pub fn restore_files(_paths: Vec<String>, _force: bool) -> Result<ReturnInformat
     })
 }
 
-/// Listen to change events of a directory
-#[tauri::command]
-pub async fn listen_dir(dir: String, window: tauri::Window) -> Result<String, String> {
-    let (tx, rx) = channel();
-    let watcher = std::sync::Arc::new(std::sync::Mutex::new(raw_watcher(tx).unwrap()));
-
-    watcher
-        .lock()
-        .unwrap()
-        .watch(dir.clone(), RecursiveMode::NonRecursive)
-        .unwrap();
-
-    window.once("unlisten_dir", move |_| {
-        watcher.lock().unwrap().unwatch(dir.clone()).unwrap();
-    });
-
-    loop {
-        match rx.recv() {
-            Ok(RawEvent {
-                path: Some(path),
-                op: Ok(op),
-                ..
-            }) => {
-                //window.emit("changes", path.to_str().unwrap().to_string());
-                use notify::op;
-
-                let event = match op {
-                    op::CREATE => "create".to_string(),
-                    op::REMOVE => "remove".to_string(),
-                    op::RENAME => "rename".to_string(),
-                    _ => "unknown".to_string(),
-                };
-
-                if event != "unknown" {
-                    window
-                        .emit(
-                            "changes",
-                            Event {
-                                path: path.to_str().unwrap().to_string(),
-                                event,
-                            },
-                        )
-                        .unwrap();
-                }
-            }
-            Ok(event) => eprintln!("broken event: {:?}", event),
-            Err(e) => break Err(e.to_string()),
-        }
-    }
-}
 
 /// Extract icon from executable file
 ///

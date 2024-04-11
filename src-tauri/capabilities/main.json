@@ -15,6 +15,7 @@
         "os:allow-arch",
         "os:allow-hostname",
         "os:allow-os-type",
-        "os:allow-platform"
+        "os:allow-platform",
+        "fs:allow-watch"
     ]
 }

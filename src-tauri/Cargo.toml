@@ -21,7 +21,7 @@ tauri-plugin-fs = { git = "https://github.com/tauri-apps/plugins-workspace", bra
 open = "4"
 path-absolutize = "3"
 trash = "2"
-notify = "4"
+notify = "6.1.1"
 normpath = "0.3"
 lazy_static = "1.4"
 font-loader = "0.11"

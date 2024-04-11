@@ -25,7 +25,7 @@ const reducer = (state = initialState, action: Actions): IFilesReducerState => {
                         ...accum,
                         [curr.file_path]: curr,
                     }),
-                    {}
+                    {},
                 ),
                 skippedFiles: action.meta.skipped_files,
             };
