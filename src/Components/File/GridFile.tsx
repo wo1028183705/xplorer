@@ -7,7 +7,7 @@ export interface IGridFileProps {
     metadata: FileMetaData;
     handleFileRightClick: (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>, path: string) => void;
     handleFileDoubleClick: (isDir: boolean, dirName: string) => void;
-    handleFileSingleClick: (dirName: string) => void;
+    handleFileSingleClick: (e: MouseEvent<HTMLButtonElement>, dirName: string) => void;
 }
 
 const GridFile = ({ size, metadata, handleFileRightClick, handleFileDoubleClick, handleFileSingleClick }: IGridFileProps): JSX.Element => {

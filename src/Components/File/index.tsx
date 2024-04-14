@@ -10,6 +10,7 @@ import { setActiveTab, updateTab } from "../../Store/ActionCreators/TabActionCre
 import { IAppState } from "../../Store/Reducers";
 import FileMetaData from "../../Typings/fileMetaData";
 import { updateSelection } from "../../Store/ActionCreators/SelectionActionCreators";
+import { sortFiles } from "../MainView";
 
 export type FileDisplayMode = "GridLarge" | "GridMedium" | "GridSmall" | "Detail";
 
@@ -21,9 +22,24 @@ export interface IFileProps {
 export const File = ({ mode, metadata }: IFileProps): JSX.Element => {
     const dispatch = useDispatch();
     const activeTab = useSelector<IAppState, IAppState["tabs"]["activeTab"]>((state) => state.tabs.activeTab);
+    const selected = useSelector<IAppState, IAppState["selection"]["selected"]>((state) => state.selection.selected);
+    const allFiles = useSelector<IAppState, IAppState["files"]["files"]>((state) => state.files.files);
 
-    const handleFileSingleClick = (filePath: string) => {
-        dispatch(updateSelection({ selected: [filePath] }));
+    const handleFileSingleClick = (e: MouseEvent<HTMLButtonElement>, filePath: string) => {
+        if (e.shiftKey) {
+            const files = Object.values(allFiles).sort(sortFiles);
+            const firstSelectedIndex = files.findIndex((file) => file.file_path === selected[0]);
+            const currentFileIndex = files.findIndex((file) => file.file_path === filePath);
+            const selectedFiles =
+                firstSelectedIndex < currentFileIndex
+                    ? files.slice(firstSelectedIndex, currentFileIndex + 1)
+                    : files.slice(currentFileIndex, firstSelectedIndex + 1);
+            dispatch(updateSelection({ selected: selectedFiles.map((file) => file.file_path) }));
+        } else if (e.ctrlKey)
+            dispatch(
+                updateSelection({ selected: selected.includes(filePath) ? selected.filter((path) => path !== filePath) : [...selected, filePath] }),
+            );
+        else dispatch(updateSelection({ selected: [filePath] }));
     };
 
     const handleFileRightClick = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>, path: string) => {

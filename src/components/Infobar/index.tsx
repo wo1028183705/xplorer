@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { ThemedDiv, ThemedSpan } from "../Theme";
 import { useSelector } from "react-redux";
 import { IAppState } from "../../Store/Reducers";
+import formatBytes from "../Functions/filesize";
 
 const Infobar = () => {
     const files = useSelector<IAppState, IAppState["files"]["files"]>((state) => state.files.files);
@@ -13,9 +14,18 @@ const Infobar = () => {
                     {Object.keys(files).length} Items
                 </ThemedSpan>
                 {selected.length > 0 ? (
-                    <ThemedSpan componentName="infobarItem" className="infobar-item">
-                        {selected.length} Selected
-                    </ThemedSpan>
+                    <>
+                        <ThemedSpan componentName="infobarItem" className="infobar-item">
+                            {selected.length} Selected
+                        </ThemedSpan>
+                        <ThemedSpan componentName="infobarItem" className="infobar-item">
+                            {selected.every((path) => Object.values(files).some((file) => file.file_path === path) && !files[path].is_dir) ? (
+                                formatBytes(selected.reduce((accum, path) => accum + files[path].size, 0))
+                            ) : (
+                                <></>
+                            )}
+                        </ThemedSpan>
+                    </>
                 ) : null}
             </ThemedDiv>
             <ThemedDiv componentName="infobarRight" className="infobar-right">
