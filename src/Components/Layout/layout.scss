@@ -376,3 +376,22 @@
     margin-left: 0.5rem;
     margin-right: 0.5rem;
 }
+
+.operation-bar {
+    display: flex;
+    padding: 0 0.5rem 1rem 0.5rem;
+    .operation-bar-group {
+        display: flex;
+        .operation-bar-item {
+            margin: 0 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            color: inherit;
+            border: none;
+            .operation-bar-icon {
+                margin-right: 0.5rem;
+            }
+        }
+    }
+}

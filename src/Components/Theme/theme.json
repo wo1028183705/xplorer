@@ -162,6 +162,7 @@
         "root.--scrollbarThumbHover": "rgb(59, 59, 59)",
         "sidebar.background": "rgba(27, 30, 46, var(--sidebar-transparency))",
         "mainBox.background": "rgba(36, 40, 59, var(--mainbox-transparency))",
+        "operationBar.background": "rgba(27, 30, 46, var(--mainbox-transparency))",
         "topbar.background": "rgba(27, 30, 46, var(--topbar-transparency))",
         "infobar.background": "rgba(27, 30, 46, var(--mainbox-transparency))",
         "root.loadingBar.background": "#1b1e2e",
@@ -169,6 +170,9 @@
         "root.sidebarSettingButton.background": "inherit",
         "root.sidebarSettingButton.color": "#98aec1",
         "root#sidebarResizer.background": "#292d42",
+
+        "operationBarItem.background": "rgba(27, 30, 46, var(--mainbox-transparency))",
+        "operationBarItem.color": "#87c1ce",
 
         "windowManagerMinimizeButton.background": "#fbd914",
         "windowManagerMinimizeButton.color": "#14141b",

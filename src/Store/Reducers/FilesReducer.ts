@@ -11,6 +11,10 @@ const initialState: IFilesReducerState = {
     jsonFiles: {},
     trashedFiles: {},
     filePreview: null,
+    operation: {
+        operation: null,
+        sources: [],
+    },
 };
 
 const reducer = (state = initialState, action: Actions): IFilesReducerState => {
@@ -175,6 +179,8 @@ const reducer = (state = initialState, action: Actions): IFilesReducerState => {
                 ...state,
                 filePreview: null,
             };
+        case "FILE_OPERATION":
+            return { ...state, operation: action.operation };
         default:
             return state;
     }

@@ -10,6 +10,7 @@ import LoadingBar from "./Components/LoadingBar";
 import Properties from "./Components/Properties";
 import Sidebar from "./Components/Sidebar";
 import Infobar from "./Components/Infobar";
+import OperationBar from "./Components/OperationBar";
 
 import { setActiveTab } from "./Store/ActionCreators/TabActionCreators";
 import { IAppState } from "./Store/Reducers";
@@ -58,6 +59,7 @@ const App = () => {
                     <Sidebar />
                     <ThemedDiv componentName="main" className="main">
                         <Header />
+                        <OperationBar />
                         <LoadingBar isLoading={false} />
                         <MainView currentDirectory={activeTab.path} />
                         <Infobar />
