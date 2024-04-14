@@ -9,10 +9,12 @@ import Header from "./Components/Header";
 import LoadingBar from "./Components/LoadingBar";
 import Properties from "./Components/Properties";
 import Sidebar from "./Components/Sidebar";
+import Infobar from "./Components/Infobar";
 
 import { setActiveTab } from "./Store/ActionCreators/TabActionCreators";
 import { IAppState } from "./Store/Reducers";
 import "./Public/style.scss";
+import { ThemedDiv } from "./Components/Theme";
 
 const App = () => {
     const dispatch = useDispatch();
@@ -40,26 +42,32 @@ const App = () => {
         const scaledOpacity = Math.round(opacity * 255); // Scales to 0-255
         return scaledOpacity.toString(16);
     };
+    const styles = {
+        fontFamily: config.fontFamily,
+        fontSize: `${config.fontSize}px`,
+        opacity: opacityToHex(config.opacity),
+        "--mainbox-transparency": config.mainBoxTransparency,
+        "--topbar-transparency": config.topbarTransparency,
+        "--sidebar-transparency": config.sidebarTransparency,
+    };
 
     return (
-        <div
-            id="app-container"
-            style={{
-                backgroundColor: `${config?.background ?? "#000000"}${opacityToHex(config?.opacity ?? 1)}`,
-            }}
-        >
-            <div className="container">
-                <Sidebar />
-                <main className="main">
-                    <Header />
-                    <LoadingBar isLoading={false} />
-                    <MainView currentDirectory={activeTab.path} />
-                </main>
-            </div>
-            <SettingsView />
-            <ContextMenu />
-            <Properties />
-        </div>
+        <ThemedDiv componentName="root">
+            <ThemedDiv componentName="appContainer" id="app-container" style={styles}>
+                <ThemedDiv componentName="container" className="container">
+                    <Sidebar />
+                    <ThemedDiv componentName="main" className="main">
+                        <Header />
+                        <LoadingBar isLoading={false} />
+                        <MainView currentDirectory={activeTab.path} />
+                        <Infobar />
+                    </ThemedDiv>
+                </ThemedDiv>
+                <SettingsView />
+                <ContextMenu />
+                <Properties />
+            </ThemedDiv>
+        </ThemedDiv>
     );
 };
 

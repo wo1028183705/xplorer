@@ -12,6 +12,15 @@ import {
     SetDecorationsFailure,
     SetDecorationsRequest,
     SetDecorationsSuccess,
+    MaximizeWindowRequest,
+    MaximizeWindowSuccess,
+    MaximizeWindowFailure,
+    MinimizeWindowRequest,
+    MinimizeWindowSuccess,
+    MinimizeWindowFailure,
+    CloseWindowRequest,
+    CloseWindowSuccess,
+    CloseWindowFailure,
 } from "../../Typings/Store/window";
 
 export const listenWindowCloseRequest = (): ListenWindowCloseRequest => ({
@@ -82,6 +91,54 @@ export const setDecorationsSuccess = (): SetDecorationsSuccess => ({
 
 export const setDecorationsFailure = (message: string): SetDecorationsFailure => ({
     type: "SET_DECORATIONS",
+    status: "FAILURE",
+    message,
+});
+
+export const maximizeWindowRequest = (): MaximizeWindowRequest => ({
+    type: "MAXIMIZE_WINDOW",
+    status: "REQUEST",
+});
+
+export const maximizeWindowSuccess = (): MaximizeWindowSuccess => ({
+    type: "MAXIMIZE_WINDOW",
+    status: "SUCCESS",
+});
+
+export const maximizeWindowFailure = (message: string): MaximizeWindowFailure => ({
+    type: "MAXIMIZE_WINDOW",
+    status: "FAILURE",
+    message,
+});
+
+export const minimizeWindowRequest = (): MinimizeWindowRequest => ({
+    type: "MINIMIZE_WINDOW",
+    status: "REQUEST",
+});
+
+export const minimizeWindowSuccess = (): MinimizeWindowSuccess => ({
+    type: "MINIMIZE_WINDOW",
+    status: "SUCCESS",
+});
+
+export const minimizeWindowFailure = (message: string): MinimizeWindowFailure => ({
+    type: "MINIMIZE_WINDOW",
+    status: "FAILURE",
+    message,
+});
+
+export const closeWindowRequest = (): CloseWindowRequest => ({
+    type: "CLOSE_WINDOW",
+    status: "REQUEST",
+});
+
+export const closeWindowSuccess = (): CloseWindowSuccess => ({
+    type: "CLOSE_WINDOW",
+    status: "SUCCESS",
+});
+
+export const closeWindowFailure = (message: string): CloseWindowFailure => ({
+    type: "CLOSE_WINDOW",
     status: "FAILURE",
     message,
 });

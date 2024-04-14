@@ -6,7 +6,6 @@
     "permissions": [
         "path:default",
         "event:default",
-        "window:default",
         "app:default",
         "resources:default",
         "menu:default",
@@ -16,6 +15,10 @@
         "os:allow-hostname",
         "os:allow-os-type",
         "os:allow-platform",
-        "fs:allow-watch"
+        "fs:allow-watch",
+        "window:allow-start-dragging",
+        "window:allow-minimize",
+        "window:allow-maximize",
+        "window:allow-close"
     ]
 }

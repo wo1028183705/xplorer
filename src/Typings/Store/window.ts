@@ -10,6 +10,9 @@ export const LISTEN_WINDOW_CLOSE = "LISTEN_WINDOW_CLOSE";
 export const CREATE_WINDOW = "CREATE_WINDOW";
 export const CHANGE_WINDOW_TITLE = "CHANGE_WINDOW_TITLE";
 export const SET_DECORATIONS = "SET_DECORATIONS";
+export const MAXIMIZE_WINDOW = "MAXIMIZE_WINDOW";
+export const MINIMIZE_WINDOW = "MINIMIZE_WINDOW";
+export const CLOSE_WINDOW = "CLOSE_WINDOW";
 
 export type ListenWindowCloseRequest = AppActionBase<typeof LISTEN_WINDOW_CLOSE, "REQUEST"> & {};
 export type ListenWindowCloseSuccess = AppActionBase<typeof LISTEN_WINDOW_CLOSE, "SUCCESS"> & {};
@@ -27,6 +30,18 @@ export type SetDecorationsRequest = AppActionBase<typeof SET_DECORATIONS, "REQUE
 export type SetDecorationsSuccess = AppActionBase<typeof SET_DECORATIONS, "SUCCESS"> & {};
 export type SetDecorationsFailure = AppActionBase<typeof SET_DECORATIONS, "FAILURE"> & { message: string };
 
+export type MaximizeWindowRequest = AppActionBase<typeof MAXIMIZE_WINDOW, "REQUEST"> & {};
+export type MaximizeWindowSuccess = AppActionBase<typeof MAXIMIZE_WINDOW, "SUCCESS"> & {};
+export type MaximizeWindowFailure = AppActionBase<typeof MAXIMIZE_WINDOW, "FAILURE"> & { message: string };
+
+export type MinimizeWindowRequest = AppActionBase<typeof MINIMIZE_WINDOW, "REQUEST"> & {};
+export type MinimizeWindowSuccess = AppActionBase<typeof MINIMIZE_WINDOW, "SUCCESS"> & {};
+export type MinimizeWindowFailure = AppActionBase<typeof MINIMIZE_WINDOW, "FAILURE"> & { message: string };
+
+export type CloseWindowRequest = AppActionBase<typeof CLOSE_WINDOW, "REQUEST"> & {};
+export type CloseWindowSuccess = AppActionBase<typeof CLOSE_WINDOW, "SUCCESS"> & {};
+export type CloseWindowFailure = AppActionBase<typeof CLOSE_WINDOW, "FAILURE"> & { message: string };
+
 export type WindowActions =
     | ListenWindowCloseRequest
     | ListenWindowCloseSuccess
@@ -39,6 +54,22 @@ export type WindowActions =
     | ChangeWindowTitleFailure
     | SetDecorationsRequest
     | SetDecorationsSuccess
-    | SetDecorationsFailure;
+    | SetDecorationsFailure
+    | MaximizeWindowRequest
+    | MaximizeWindowSuccess
+    | MaximizeWindowFailure
+    | MinimizeWindowRequest
+    | MinimizeWindowSuccess
+    | MinimizeWindowFailure
+    | CloseWindowRequest
+    | CloseWindowSuccess
+    | CloseWindowFailure;
 
-export type WindowActionTypes = typeof LISTEN_WINDOW_CLOSE | typeof CREATE_WINDOW | typeof CHANGE_WINDOW_TITLE | typeof SET_DECORATIONS;
+export type WindowActionTypes =
+    | typeof LISTEN_WINDOW_CLOSE
+    | typeof CREATE_WINDOW
+    | typeof CHANGE_WINDOW_TITLE
+    | typeof SET_DECORATIONS
+    | typeof MAXIMIZE_WINDOW
+    | typeof MINIMIZE_WINDOW
+    | typeof CLOSE_WINDOW;

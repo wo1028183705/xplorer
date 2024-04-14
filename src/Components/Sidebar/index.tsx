@@ -8,6 +8,7 @@ import { IFavoritesReducerState } from "../../Typings/Store/favorites";
 import XplorerLogo from "../../Icon/extension/xplorer.svg";
 import FavoriteLogo from "../../Icon/folder/sidebar-favorite.svg";
 import HardDiskLogo from "../../Icon/hard-disk.svg";
+import { ThemedDiv, ThemedSpan } from "../Theme";
 
 const Sidebar = () => {
     const dispatch = useDispatch();
@@ -24,40 +25,43 @@ const Sidebar = () => {
     };
 
     return (
-        <div className="sidebar">
-            <span className="xplorer-brand">
+        <ThemedDiv componentName="sidebar" className="sidebar">
+            <ThemedSpan componentName="xplorerBrand" className="xplorer-brand">
                 <span>Xplorer</span>
                 <img alt="Xplorer Logo" src={XplorerLogo} />
-            </span>
-            <div className="sidebar-nav">
-                <div id="sidebar-favorites" data-section="favorites">
-                    <div className="sidebar-nav-toggle sidebar-hover-effect">
+            </ThemedSpan>
+            <ThemedDiv componentName="sidebarNav" className="sidebar-nav">
+                <ThemedDiv componentName="sidebarNavFavorites" id="sidebar-favorites" data-section="favorites">
+                    <ThemedDiv componentName="sidebarNavToogle" className="sidebar-nav-toggle sidebar-hover-effect">
                         <img alt="Favorites" src={FavoriteLogo} />
-                        <span className="sidebar-text" />
+                        <span className="sidebar-text">Favorites</span>
                         <span className="sidebar-nav-toggle-arrow" />
-                    </div>
-                    <div className="sidebar-nav-list">
+                    </ThemedDiv>
+                    <ThemedDiv componentName="sidebarNavFavoritesList" className="sidebar-nav-list">
                         {Object.entries(favorites)
                             .sort(favoritesSort)
                             .map(([name, path]) => (
-                                <span
+                                <ThemedSpan
+                                    componentName="sidebarNavFavoritesItem"
                                     data-path={path}
                                     className="sidebar-hover-effect sidebar-nav-item favorite-item"
                                     onClick={() => navigateToPath(path)}
                                     key={path + name}
                                 >
                                     <div className="sidebar-icon"></div>
-                                    <span className="sidebar-text">{name}</span>
-                                </span>
+                                    <ThemedSpan componentName="sidebarText" className="sidebar-text">
+                                        {name}
+                                    </ThemedSpan>
+                                </ThemedSpan>
                             ))}
-                    </div>
-                </div>
+                    </ThemedDiv>
+                </ThemedDiv>
                 <div id="sidebar-drives" data-section="drives">
-                    <div className="sidebar-nav-toggle sidebar-hover-effect">
+                    <ThemedDiv componentName="sidebarNavToogle" className="sidebar-nav-toggle sidebar-hover-effect">
                         <img src={HardDiskLogo} alt="Drives" />
                         <span className="sidebar-text" />
                         <span className="sidebar-nav-toggle-arrow" />
-                    </div>
+                    </ThemedDiv>
                     <div className="sidebar-nav-list">
                         {drives.map(({ name, mount_point }) => (
                             <span
@@ -67,14 +71,16 @@ const Sidebar = () => {
                                 key={mount_point + name}
                             >
                                 <div className="sidebar-icon"></div>
-                                <span className="sidebar-text">{name}</span>
+                                <ThemedSpan componentName="sidebarText" className="sidebar-text">
+                                    {name}
+                                </ThemedSpan>
                             </span>
                         ))}
                     </div>
                 </div>
-            </div>
+            </ThemedDiv>
             <a>Settings</a>
-        </div>
+        </ThemedDiv>
     );
 };
 

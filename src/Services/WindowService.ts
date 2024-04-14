@@ -17,3 +17,15 @@ export const changeWindowTitle = (title: string): void => {
 export const setDecorations = (decorations: boolean): void => {
     window.getCurrent().setDecorations(decorations);
 };
+
+export const maximizeWindow = (): void => {
+    window.getCurrent().maximize();
+};
+
+export const minimizeWindow = (): void => {
+    window.getCurrent().minimize();
+};
+
+export const closeWindow = (): void => {
+    window.getCurrent().close();
+};

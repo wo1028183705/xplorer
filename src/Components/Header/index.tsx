@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import SubHeader from "./SubHeader";
@@ -6,10 +6,13 @@ import { getStandardPath } from "../../Helpers/paths";
 import { fetchFilesRequest, updateHistoryIdxRequest } from "../../Store/ActionCreators/DirectoryActionCreators";
 import { createTab, setActiveTab } from "../../Store/ActionCreators/TabActionCreators";
 import { IAppState } from "../../Store/Reducers";
-
+import { ThemedButton, ThemedDiv, ThemedSpan } from "../Theme";
+import { closeWindowRequest, maximizeWindowRequest, minimizeWindowRequest } from "../../Store/ActionCreators/WindowActionCreators";
+let tabId = 0;
 export interface ITab {
     name: string;
     path: string;
+    id: number;
 }
 
 const Header = () => {
@@ -20,7 +23,7 @@ const Header = () => {
     const directoryHistoryIdx = useSelector<IAppState, IAppState["directory"]["historyIdx"]>((state) => state.directory.historyIdx);
 
     const createNewTab = () => {
-        const newTab = { name: "New Tab", path: homeDirectory };
+        const newTab = { name: "New Tab", path: homeDirectory, id: ++tabId };
         dispatch(createTab(newTab));
         dispatch(setActiveTab(newTab));
     };
@@ -31,30 +34,48 @@ const Header = () => {
     const refreshDirectory = (dirName: string) => dispatch(fetchFilesRequest(dirName));
 
     return (
-        <div id="header-container" className="topbar" data-tauri-drag-region>
-            <div>
-                <div>
-                    {Object.values(tabs).reduce<JSX.Element[]>(
-                        (accum, tab) => [
-                            ...accum,
-                            <button type="button" onClick={() => dispatch(setActiveTab(tab))} className="tab tab-hover-effect" key={tab.name}>
-                                <span id="tab-position">{`${activeTab?.name === tab.name ? "[active] " : ""}${tab.name}`}</span>
-                            </button>,
-                        ],
-                        [],
-                    )}
+        <ThemedDiv componentName="topbar" id="header-container" data-tauri-drag-region="">
+            <ThemedDiv componentName="header" className="header" data-tauri-drag-region="">
+                <ThemedDiv componentName="tabsManager" className="tabs-manager" data-tauri-drag-region="">
+                    {Object.values(tabs).map((tab) => (
+                        <ThemedButton
+                            key={tab.id}
+                            componentName="tab"
+                            className={`tab ${activeTab.id === tab.id ? "active" : ""}`}
+                            onClick={() => dispatch(setActiveTab(tab))}
+                        >
+                            <span id="tab-position">
+                                {activeTab.id === tab.id ? "active" : ""} {tab.name}
+                            </span>
+                        </ThemedButton>
+                    ))}
 
-                    <button type="button" onClick={createNewTab}>
+                    <ThemedButton componentName="createNewTab" onClick={createNewTab} className="create-new-tab">
                         +
-                    </button>
-                </div>
+                    </ThemedButton>
+                </ThemedDiv>
 
-                <div className="window-manager">
-                    <span id="minimize" title="Minimize"></span>
-                    <span id="maximize" title="Maximize"></span>
-                    <span id="exit" title="Exit (Ctrl + w)"></span>
-                </div>
-            </div>
+                <ThemedDiv componentName="windowManager" className="window-manager">
+                    <ThemedSpan
+                        componentName="windowManagerMinimizeButton"
+                        id="minimize"
+                        title="Minimize"
+                        onClick={() => dispatch(minimizeWindowRequest())}
+                    ></ThemedSpan>
+                    <ThemedSpan
+                        componentName="windowManagerMaximizeButton"
+                        id="maximize"
+                        title="Maximize"
+                        onClick={() => dispatch(maximizeWindowRequest())}
+                    ></ThemedSpan>
+                    <ThemedSpan
+                        componentName="windowManagerExitButton"
+                        id="exit"
+                        title="Exit (Ctrl + w)"
+                        onClick={() => dispatch(closeWindowRequest())}
+                    ></ThemedSpan>
+                </ThemedDiv>
+            </ThemedDiv>
 
             <SubHeader
                 activeTab={activeTab}
@@ -63,7 +84,7 @@ const Header = () => {
                 handlePathChange={handlePathChange}
                 handleDirectoryRefresh={refreshDirectory}
             />
-        </div>
+        </ThemedDiv>
     );
 };
 

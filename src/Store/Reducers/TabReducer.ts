@@ -6,6 +6,7 @@ import { Actions } from "../../Typings/Store/store";
 const defaultTab: ITab = {
     name: "Default Tab",
     path: "",
+    id: 0,
 };
 
 interface INewTabs {
@@ -13,7 +14,7 @@ interface INewTabs {
 }
 
 const initialState: ITabReducerState = {
-    tabs: { [defaultTab.name]: defaultTab },
+    tabs: { [defaultTab.id]: defaultTab },
     activeTab: defaultTab,
 };
 
@@ -26,20 +27,20 @@ const reducer = (state = initialState, action: Actions): ITabReducerState => {
                 ...state,
                 tabs: {
                     ...state.tabs,
-                    [action.tab.name]: action.tab,
+                    [action.tab.id]: action.tab,
                 },
             };
         case "UPDATE_TAB":
             const newTabs: INewTabs = {};
             Object.entries(state.tabs).forEach(([name, tab]) => {
-                if (name === action.name) {
-                    newTabs[action.tab.name] = {
+                if (tab.id === action.tab.id) {
+                    newTabs[tab.id] = {
                         ...tab,
                         ...action.tab,
                         name: action.tab.name || tab.name,
                     };
                 } else {
-                    newTabs[name] = tab;
+                    newTabs[tab.id] = tab;
                 }
             });
             return {

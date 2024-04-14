@@ -10,6 +10,12 @@ import {
     listenWindowCloseSuccess,
     setDecorationsFailure,
     setDecorationsSuccess,
+    maximizeWindowSuccess,
+    maximizeWindowFailure,
+    minimizeWindowSuccess,
+    minimizeWindowFailure,
+    closeWindowSuccess,
+    closeWindowFailure,
 } from "../ActionCreators/WindowActionCreators";
 
 import { ChangeWindowTitleRequest, CreateNewWindowRequest, SetDecorationsRequest } from "../../Typings/Store/window";
@@ -57,12 +63,42 @@ function* setDecorationsWorker(action: SetDecorationsRequest) {
     }
 }
 
+function* maximizeWindowWorker() {
+    try {
+        yield call(WindowService.maximizeWindow);
+        yield put(maximizeWindowSuccess());
+    } catch (error) {
+        yield put(maximizeWindowFailure(error.message));
+    }
+}
+
+function* minimizeWindowWorker() {
+    try {
+        yield call(WindowService.minimizeWindow);
+        yield put(minimizeWindowSuccess());
+    } catch (error) {
+        yield put(minimizeWindowFailure(error.message));
+    }
+}
+
+function* closeWindowWorker() {
+    try {
+        yield call(WindowService.closeWindow);
+        yield put(closeWindowSuccess());
+    } catch (error) {
+        yield put(closeWindowFailure(error.message));
+    }
+}
+
 function* windowSaga() {
     yield all([
         takeLatest(selectStatus("LISTEN_WINDOW_CLOSE"), listenWindowCloseWorker),
         takeLatest(selectStatus("CREATE_WINDOW"), createNewWindowWorker),
         takeLatest(selectStatus("CHANGE_WINDOW_TITLE"), changeWindowTitleWorker),
         takeLatest(selectStatus("SET_DECORATIONS"), setDecorationsWorker),
+        takeLatest(selectStatus("MAXIMIZE_WINDOW"), maximizeWindowWorker),
+        takeLatest(selectStatus("MINIMIZE_WINDOW"), minimizeWindowWorker),
+        takeLatest(selectStatus("CLOSE_WINDOW"), closeWindowWorker),
     ]);
 }
 

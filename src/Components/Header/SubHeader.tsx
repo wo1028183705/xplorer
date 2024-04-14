@@ -1,83 +1,87 @@
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from "react";
 
-import { ITab } from '.';
-import { getParentDirectory } from '../../Helpers/paths';
+import { ITab } from ".";
+import { getParentDirectory } from "../../Helpers/paths";
+import { ThemedButton, ThemedDiv, ThemedInput } from "../Theme";
 
 export interface ISubHeaderProps {
-  activeTab: ITab,
-  handleForward: () => void,
-  handleBack: () => void,
-  handlePathChange: (tab: ITab) => void,
-  handleDirectoryRefresh: (dirName: string) => void
+    activeTab: ITab;
+    handleForward: () => void;
+    handleBack: () => void;
+    handlePathChange: (tab: ITab) => void;
+    handleDirectoryRefresh: (dirName: string) => void;
 }
 
-const SubHeader = ({
-  activeTab, handleBack, handleForward,
-  handlePathChange, handleDirectoryRefresh
-}: ISubHeaderProps) => {
-  const [tempTab, setTempTab] = useState(activeTab);
+const SubHeader = ({ activeTab, handleBack, handleForward, handlePathChange, handleDirectoryRefresh }: ISubHeaderProps) => {
+    const [tempTab, setTempTab] = useState(activeTab);
 
-  // Updates tempTab variable with external tab changes
-  useEffect(() => {
-    if (JSON.stringify(activeTab) === JSON.stringify(tempTab)) return;
-    setTempTab(activeTab);
-  }, [activeTab]);
+    // Updates tempTab variable with external tab changes
+    useEffect(() => {
+        if (JSON.stringify(activeTab) === JSON.stringify(tempTab)) return;
+        setTempTab(activeTab);
+    }, [activeTab]);
 
-  const handleFormSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    handlePathChange(tempTab);
-  }
+    const handleFormSubmit = (e: FormEvent) => {
+        e.preventDefault();
+        handlePathChange(tempTab);
+    };
 
-  return (
-    <div id="subheader-container" className="row">
-      <div className="navigator">
-        <button
-          type="button"
-          onClick={() => handleBack()}
-          // id="go-back"
-          title="Go Back (Alt + Left Arrow)"
-        >
-          &larr;
-        </button>
+    return (
+        <ThemedDiv componentName="subheader" id="subheader-container" className="subheader">
+            <ThemedDiv componentName="navigator" className="navigator">
+                <ThemedButton
+                    componentName="navigatorBack"
+                    className="navigator-back"
+                    onClick={() => handleBack()}
+                    // id="go-back"
+                    title="Go Back (Alt + Left Arrow)"
+                >
+                    &larr;
+                </ThemedButton>
 
-        <button
-          type="button"
-          onClick={() => handleForward()}
-          // id="go-forward"
-          title="Go Forward (Alt + Right Arrow)"
-        >
-          &rarr;
-        </button>
+                <ThemedButton
+                    componentName="navigatorForward"
+                    className="navigator-forward"
+                    onClick={() => handleForward()}
+                    // id="go-forward"
+                    title="Go Forward (Alt + Right Arrow)"
+                >
+                    &rarr;
+                </ThemedButton>
 
-        <button
-          type="button"
-          onClick={() => handlePathChange({ ...tempTab, path: getParentDirectory(tempTab.path) })}
-          // id="go-parent-dir"
-          title="Parent Directory (Alt + Up Arrow)"
-        >
-          &uarr;
-        </button>
+                <ThemedButton
+                    componentName="navigatorParentDir"
+                    className="navigator-parent-dir"
+                    onClick={() => handlePathChange({ ...tempTab, path: getParentDirectory(tempTab.path) })}
+                    // id="go-parent-dir"
+                    title="Parent Directory (Alt + Up Arrow)"
+                >
+                    &uarr;
+                </ThemedButton>
 
-        <button
-          type="button"
-          onClick={() => handleDirectoryRefresh(tempTab.path)}
-          // id="refresh"
-          title="Reload (f5)"
-        >
-          &#10227;
-        </button>
-      </div>
+                <ThemedButton
+                    componentName="navigatorRefresh"
+                    className="navigator-refresh"
+                    onClick={() => handleDirectoryRefresh(tempTab.path)}
+                    // id="refresh"
+                    title="Reload (f5)"
+                >
+                    &#10227;
+                </ThemedButton>
+            </ThemedDiv>
 
-      <form onSubmit={handleFormSubmit}>
-        <input
-          className="path-navigator"
-          type="text"
-          value={tempTab.path}
-          onChange={(e) => setTempTab({ ...tempTab, path: e.target.value })}
-        />
-      </form>
-    </div>
-  );
-}
+            <form onSubmit={handleFormSubmit} className="path-navigator">
+                <ThemedInput
+                    componentName="pathNavigator"
+                    // @ts-ignore
+                    type="text"
+                    value={tempTab.path}
+                    // @ts-ignore
+                    onChange={(e) => setTempTab({ ...tempTab, path: e.target.value })}
+                />
+            </form>
+        </ThemedDiv>
+    );
+};
 
 export default SubHeader;

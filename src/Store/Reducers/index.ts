@@ -15,6 +15,7 @@ import { IRequestReducerState } from "../../Typings/Store/request";
 import { IStorageReducerState } from "../../Typings/Store/storage";
 import { ITabReducerState } from "../../Typings/Store/tab";
 import { IWindowReducerState } from "../../Typings/Store/window";
+import { ISelectionReducerState } from "../../Typings/Store/selection";
 
 import AppReducer from "./AppReducer";
 import ClipboardReducer from "./ClipboardReducer";
@@ -30,6 +31,7 @@ import RequestReducer from "./RequestReducer";
 import StorageReducer from "./StorageReducer";
 import TabReducer from "./TabReducer";
 import WindowReducer from "./WindowReducer";
+import SelectionReducer from "./SelectionReducer";
 
 export interface IAppState {
     app: IAppReducerState;
@@ -46,6 +48,7 @@ export interface IAppState {
     storage: IStorageReducerState;
     tabs: ITabReducerState;
     window: IWindowReducerState;
+    selection: ISelectionReducerState;
 }
 
 const rootReducer = combineReducers({
@@ -63,6 +66,7 @@ const rootReducer = combineReducers({
     storage: StorageReducer,
     tabs: TabReducer,
     window: WindowReducer,
+    selection: SelectionReducer,
 });
 
 export default rootReducer;

@@ -3,6 +3,7 @@ import { AppActionBase } from "./actions";
 export interface ITab {
     name: string;
     path: string;
+    id: number;
 }
 
 export interface ITabReducerState {
