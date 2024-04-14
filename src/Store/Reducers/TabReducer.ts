@@ -48,9 +48,11 @@ const reducer = (state = initialState, action: Actions): ITabReducerState => {
                 tabs: newTabs,
             };
         case "DELETE_TAB":
+            const newTabsList = omit(state.tabs, action.id);
             return {
                 ...state,
-                tabs: omit(state.tabs, action.name),
+                tabs: newTabsList,
+                activeTab: state.activeTab.id === action.id ? newTabsList[Object.keys(newTabsList)[0]] : state.activeTab,
             };
         case "SET_ACTIVE_TAB":
             return {

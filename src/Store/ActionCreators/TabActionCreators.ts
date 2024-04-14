@@ -13,10 +13,10 @@ export const updateTab = (name: string, tab: Partial<ITab>): UpdateTabSuccess =>
     tab,
 });
 
-export const deleteTab = (name: string): DeleteTabSuccess => ({
+export const deleteTab = (id: number): DeleteTabSuccess => ({
     type: "DELETE_TAB",
     status: "SUCCESS",
-    name,
+    id,
 });
 
 export const setActiveTab = (tab: ITab, pushToHistory = true): SetActiveTabSuccess => ({

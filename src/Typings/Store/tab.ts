@@ -18,7 +18,7 @@ export const SET_ACTIVE_TAB = "SET_ACTIVE_TAB"; // * Internal
 
 export type CreateTabSuccess = AppActionBase<typeof CREATE_TAB, "SUCCESS"> & { tab: ITab };
 export type UpdateTabSuccess = AppActionBase<typeof UPDATE_TAB, "SUCCESS"> & { name: string; tab: Partial<ITab> };
-export type DeleteTabSuccess = AppActionBase<typeof DELETE_TAB, "SUCCESS"> & { name: string };
+export type DeleteTabSuccess = AppActionBase<typeof DELETE_TAB, "SUCCESS"> & { id: number };
 export type SetActiveTabSuccess = AppActionBase<typeof SET_ACTIVE_TAB, "SUCCESS"> & { tab: ITab; pushToHistory?: boolean };
 
 export type TabActions = CreateTabSuccess | UpdateTabSuccess | DeleteTabSuccess | SetActiveTabSuccess;

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import SubHeader from "./SubHeader";
 import { getStandardPath } from "../../Helpers/paths";
 import { fetchFilesRequest, updateHistoryIdxRequest } from "../../Store/ActionCreators/DirectoryActionCreators";
-import { createTab, setActiveTab } from "../../Store/ActionCreators/TabActionCreators";
+import { createTab, deleteTab, setActiveTab } from "../../Store/ActionCreators/TabActionCreators";
 import { IAppState } from "../../Store/Reducers";
 import { ThemedButton, ThemedDiv, ThemedSpan } from "../Theme";
 import { closeWindowRequest, maximizeWindowRequest, minimizeWindowRequest } from "../../Store/ActionCreators/WindowActionCreators";
@@ -47,6 +47,17 @@ const Header = () => {
                             <span id="tab-position">
                                 {activeTab.id === tab.id ? "active" : ""} {tab.name}
                             </span>
+                            <ThemedSpan
+                                componentName="tabCloseButton"
+                                className="tab-close-button"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    dispatch(deleteTab(tab.id));
+                                    dispatch(fetchFilesRequest(activeTab.path));
+                                }}
+                            >
+                                &times;
+                            </ThemedSpan>
                         </ThemedButton>
                     ))}
 
